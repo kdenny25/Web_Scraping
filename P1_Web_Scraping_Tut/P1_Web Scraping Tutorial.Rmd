@@ -1,0 +1,85 @@
+---
+title: "Web Scraping Tutorial"
+output: html_notebook
+---
+
+> This tutorial is from: https://www.freecodecamp.org/news/an-introduction-to-web-scraping-using-r-40284110c848/
+
+> First there are some packages that need to be insttaled first.
+
+```{r}
+install.packages("selectr")
+install.packages("xml2")
+install.packages("rvest")
+```
+
+> Some basic web scraping functions include:
+
++ **read_html(url)**: scrape HTML content from a given URL
++ **html_nodes()**: identifies HTML wrappers.
++ **html_nodes(".class")**: calls node based on CSS class
++ **html_nodes("#id")**: calls node based on '<div>' id
++ **html_nodes(xpath="xpath")**: calls node based xpath (we'll cover this later)
++ **html_attrs()**: identifies attributes (useful for debugging)
++ **html_table()**: turns HTML tables into data frames
++ **html_text()**: strips the HTML tags and extracts only the text
+
+### Stringr
+
+> stringr is used for data cleaning and preparation. There are four functions to stringr
+
++ functions allow you to work around individual characters within strings
++ whitespace can be manipulated
++ locale sensitive operations
++ pattern matching functions
+
+```{r}
+install.packages("stringr")
+```
+
+### jsonlite
+
+> This package allows easy conversion between R objects and JSON without loss of type or information. It also allows for easy interaction with APIs
+
+```{r}
+install.packages("jsonlite")
+```
+
+## Implementation
+
+**Load Packages**
+
+```{r}
+library(xml2)
+library(rvest)
+library(stringr)
+```
+
+**Read HTML content from select site**
+
+```{r}
+url <- "https://www.amazon.in/OnePlus-Mirror-Black-64GB-Memory/dp/B0756Z43QS?tag=googinhydr18418-21&tag=googinkenshoo-21&ascsubtag=aee9a916-6acd-4409-92ca-3bdbeb549f80"
+
+webpage <- read_html(url)
+```
+
+> The webpage elements can be inspected to retreive the class IDs. In this example to retrieve the title the class id is *title*
+
+```{r}
+#pull title from site
+title_html <- html_nodes(webpage, 'h1#title')
+#convert to text
+title <- html_text(title_html)
+
+head(title)
+```
+
+
+> Looking at the head file you can see that there are a lot of spaces. To remove them use the code below. 
+
+```{r}
+str_replace_all(title, "[\r\n]" , "")
+```
+
+
+
